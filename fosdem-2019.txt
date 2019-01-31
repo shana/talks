@@ -1,0 +1,80 @@
+Intro
+
+# Languages in Game Development
+
+To start off, let me give you a brief overview of the approach game development takes to programming languages.
+
+Games, like everything, are built on layers of technology. The lowest layer is the game engine, and game engines are built using whatever language the developers choose as most efficient at putting pixels on a screen really really fast while still portable enough to run it on multiple platforms. C/C++ is a common choice.
+
+The game engine is like your own personal mini-OS abstraction that the game runs on. As such, people building things for this personal mini-OS don't want to care about the details, they just want to get things done. People like gameplay programmers and level designers are not spending time tweaking the engine, they're spending their time building the game with tools that are optimized for building gameplay and designing levels.
+
+At this point, it's not very efficient to have them do this directly in the engine code, so you add a layer on top that they can use to describe what the game has to do and talk to the engine, without having to be knee deep in engine code. This is where a scripting language comes in, picked to be optimal for the tasks that people building the game itself need to do. In a lot of cases this isn't the same language that the engine is built on.
+
+# Uncharted
+
+I got interested in this subject when I saw the slides for a GDC talk given by Naughty Dog in 2009, talking about their approach to scripting when making the Uncharted series.
+
+They looked at what a game is from the lens of a designer, decided that the language for the engine is not suited for this task, and built a simplified Lisp/Scheme language that their designers use to script the game, all the NPCs, events, story, dialog, etc, etc.
+
+This also happens to be an excellent way to provide a community with game modding tools. You can't just give them access to the engine code, but with the whole game built on a modular system with a scripting language, you basically get community modding almost for free.
+
+# Neverwinter Nights
+
+A while ago my partner and I started playing around with the idea of building a Neverwinter-Nights-type game.
+
+Neverwinter Nights is an RPG by BioWare, released in 2002, based on the D&D 3rd edition rules. What sets Neverwinter Nights apart is their fully scriptable runtime and modding tools, that allow anyone to build their own game and run that game for others in multiplayer mode.
+
+Screenshot
+Screenshot
+
+Anyone can fire up a server and get their friends to play in a shared world, and a server admin can take over an NPC and interact with the players in real time, bypassing the scripted dialog trees, if they want. 
+
+We both really miss a good online multiplayer community RPG, so we kinda went "that would be cool, we should build that". Since we both know Unity3D, that was the obvious choice - and Unity has two nice things going for it for this project - a really powerful scripting language in C#, and Mono under the hood. Having Mono means having all the needed tools to compile and reload code at runtime in a cross-platform way without system dependencies.
+
+# I thought this was about Typescript?
+
+We made a quick scripting system where we could select an object in the world, add a script to it triggering on some event, and make the script run without stopping the game. That was cool!
+
+But then it became awkward, because C# requires a LOT of scaffolding just to get going:
+
+`
+class Something {
+	public void Method() {
+		// the actual script to run
+	}
+}
+`
+
+In order for the user script to be executed, I have to know what method to call, which means the methods have to have a very specific signature, so it's handy to hide that from the user so they don't have to worry about it.
+
+If I hide the scaffolding so that the user only has to type the code they want to run, then that means that a user can't load a script in an external IDE and edit it and have code completion and all the nice things. 
+
+OTOH if the scaffolding is there, it's just so much harder for a user to just script things, and so easy for them to get a signature wrong or get tripped over details.
+
+The more we looked at it, the more it felt we needed a language that didn't require all this setup. Something more straightforward and simple, closer to an interpreted language in its syntax. At the same time, the language still needed to be something we could compile and load with the tools we had available (so targeting .NET), with good IDE support so people could use existing tools to create scripts.
+
+At about the same time I started playing around with Typescript and really liked what I was seeing. Here was a language with full type information but way less scaffolding needs, which would fit our needs perfectly. Only one problem: it's targeting the wrong runtime.
+
+# Typescript enters the scene
+
+The fact that Typescript is designed as a source language for transpilation and as a way of adding type information to another language means that it comes with a ridiculous amount of tooling whose only job is to parse Typescript and output trees of information about the code.
+
+I started looking at Typescript critically and separating the Typescript language from the Node environment, and seeing what it would look like. Could I take Typescript AST information and output IL? Did I have enough type information? Were there things Typescript could do that IL couldn't?
+
+- Ignoring `any` means that we don't need to use the DLR
+- ValueTuple means it's even more straightforward to emit Typescript syntax in IL
+
+## Tooling
+
+Typescript comes with a handy APIs for generating ASTs from source code.
+
+[AST code]
+
+[AST output]
+
+
+
+
+When I started implementing my own runtime-moddable game with Unity, I realized how awkward C# is for scripting, and how there just might be a better language for this. In this talk we'll look at what a game scripting language ideally needs and does, why C# is not quite the best of fits, and why Typescript is - when it targets the .NET runtime!
+
+
