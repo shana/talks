@@ -1,0 +1,15 @@
+Typescript => IL => Game Modding Supercharged
+
+In the game development world, games are built in layers, and it's common to have different languages for the different layers. C/C++ is a common choice for the engine layer, while C# is a popular choice for the scripting layer - the one that gameplay is implemented with, and the one available for users to mod their games with. There's multiple engines built on C# (Unity and Monogame come to mind).
+
+When I started implementing my own runtime-moddable game with Unity, I realized how awkward C# is for scripting, and how there just might be a better language for this. In this talk we'll look at what a game scripting language ideally needs and does, why C# is not quite the best of fits, and why Typescript is - when it targets the .NET runtime!
+
+At the end, you'll hopefully have a better understanding of how languages fit in game development and what (great!) tooling Typescript has for introspection and compiling.
+
+
+Recording me on audio and/or video: acceptable under a CC-BY-2.0 license (DEFAULT)
+
+Andreia Gaita is a C#/C++/[insert language here] developer and longtime open source and Mono contributor, currently working at GitHub doing .NET and open source and building GitHub for Unity. For the past 16 years, Andreia has been involved in the development of cross-platform applications, services, and libraries, embedding browser engines, creating bindings, and making tools that help developers be successful. She hails from the sunny city of Lisbon, Portugal, and currently lives in Copenhagen, Denmark, where she bikes a lot (when it's warm). 
+
+website: 
+blog url: blog.worldofcoding.com

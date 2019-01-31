@@ -1,0 +1,14 @@
+Deep Dive into Git and Git LFS
+
+Git has become an incredibly popular version control system, but its incorporation into game development workflows has traditionally not been easy, due to the particular needs of this type of development and lack of tooling aimed towards game developers.
+
+In this deep dive we'll look at how Git works, how to use Git with Unity, how to handle large files, how to coordinate work on scenes and other hard to merge files via File Locking, as well as various source control workflows and strategies suited for small and large teams. We'll examine different failure scenarios and how to recover from them, intermediate and advanced Git commands and usage, best practices for Git and Git LFS and what tools and clients are currently available beyond the command line.
+
+By the end of this deep dive you should have a good understanding of how best to use Git and how to incorporate it in your workflow, as well as a (virtual) Bag of Holding +2 of hints, tips and tricks.
+
+
+Andreia Gaita is a C#/C++ developer and the lead of the Editor Tools team at GitHub, building developer tools like the GitHub for Unity and GitHub for Visual Studio.
+
+Previously, she hacked away on Mono and the Unity runtime as part of the Scripting team at Unity, worked on Mono for Android at Xamarin, Moonlight on the Mono team at Novell, and for the past 16 years has been involved in the development of cross-platform services, libraries, engines, bindings, and tools that help developers be successful.
+
+She hails from the sunny city of Lisbon, Portugal, and currently lives in Copenhagen, Denmark, where she bikes a lot (when it's sunny).

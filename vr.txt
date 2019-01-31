@@ -1,0 +1,6 @@
+1.) Install any Gear VR app with your device signature (app can downloaded, compiled, or backed up from an official install)
+2.) Go to your device Settings -> Application manager -> Gear VR Service (usually in the "Downloaded" section but could also be in the "All" section).
+3.) Tap on "Manage storage"
+4.) Tap the "VR Service Version" number six times.
+5.) Wait for scan process to complete and you should now see the Developer Mode toggle on this screen.
+6.) You should now be able to launch your app without the headset and also dock the headset at any time without having Home launch.

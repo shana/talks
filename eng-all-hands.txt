@@ -1,0 +1,104 @@
+Hello everyone!
+
+I'm shana, speaking to you from Copenhagen, Denmark. I'm the lead of the Editor Tools team, and I'm going to talk about what we do, what we ship, and our world domination plans.
+
+SLIDE
+
+The editor tools team is composed of myself, grokys and paladíque, with pmn, saraford, donokuda and femi on all things product, design and QA. It is under the umbrella of client apps, led by the great haack. 
+
+Our mission is to provide a productive and consistent GitHub experience to all developers working in their preferred editor/IDE, in a manner that feels native and integrated. We want to have GitHub at every developer's fingertips.
+
+We do this by building integrations in editor and IDEs, and our first integration is the GitHub Extension for Visual Studio.
+
+SLIDE
+
+Back in January 2015 I started working at GitHub, and together with Phil began building the Visual Studio extension.
+
+We partnered with Microsoft on it, and for four months we worked closely with them on it.
+
+Microsoft gave us access to private builds of VS with new APIs that we could use so that we could ship our integration from day one when Visual Studio 2015 came out, and we're the only third-party source control provider shipped in the box with Visual Studio.
+
+SLIDE
+
+You can install the GitHub Extension when you're installing Visual Studio via the Microsoft installer, and we're the only third party extension featured in the Visual Studio installer.
+
+START PAGE 
+
+Last month, Microsoft shipped a developer preview of the next version of Visual Studio, and asked us to add support for their new Start Page experience, so that developers can clone repositories directly from the Start Page when they start up Visual Studio. We shipped that a couple of weeks ago.
+
+We're also the only extension integrated with Visual Studio's source control area that supports Visual Studio 2015 and above in a single package, so users don't have to reinstall us for every new version of VS and we can seamlessly move with users to whatever version they're using. All other extensions out there ship different packages per Visual Studio version, and Microsoft told us there was no way to avoid that due to the way they've architectured those bits. We like to prove them wrong every once in a while :)
+
+SLIDE
+
+So what does a GitHub Integration do?
+
+We have defined several levels of integration that sort of build upon each other.
+
+https://github.com/github/editor-tools/blob/master/editor-tools.md
+
+Level 1 is authentication and credential support. Most IDEs have some git support already builtin, so we don't build that, but we need to make sure git seamlessly works with github, that users can access their private repos, and that github API calls work. So we figure out how the IDE uses git and what we need to do to provide credentials to git, we build a login workflow, and stuff credentials wherever they need be stuff into in order to make things work with 2fa and whatever else is needed.
+
+Level 2 is cloning, creating and publishing repositories directly from the IDE. At this point, we start having GitHub-specific UI that lists your repositories and information about the current repository you're working on, etc. Pretty self-explanatory.
+
+Level 3 is work tracking and collaboration. This is where the really interesting stuff begins. At this point we build the GitHub flow in the IDE, specifically leveraging the fact that we're on the client and we can do git operations and we have all the information from GitHub available, to automate the parts of the GitHub flow that you normally have to manually.
+
+The basic stuff we put into this is ways of accessing and creating PRs and Issues, to start with.
+
+SLIDE
+
+We look at what a developer does when they're doing the GitHub flow, and figure out the annoying bits that everyone has to manually do, and then we figure out how to make that easy and seamless.
+
+We've mapped out workflows from the contributor side and from the project maintainer side - what are the common things that a developer does when contributing to a project or maintaing a project? We looked at ways to make this process easier, and we came up with these workflows. These are the features that we are currently working on and will be shipping in the next few months.
+
+SLIDE
+
+and then the REALLY fun stuff begins!
+
+SLIDE
+
+All of the previous levels are just a framework for level 4, which we're calling rich code metadata. Feel free to suggest a better name for this :)
+
+At this point, we are in your codez, githubifying everything. We start with overlays of information at the logical code block (the smaller being a method), and we show information about who last touched this block, what open pull requests are there that touch this block, and whatever else we can think of that would be useful when you're coding.
+
+SLIDE
+
+From here it's easy to have access to the latest discussions that are relevant for the code, creating issues from code, from TODOs, from comments
+
+SLIDE
+
+We can combine git history with github information to navigate history at the code block level, showing PR information, who added what, what were they talking about when they did it
+
+We can augment bisection with information from PRs and Issues. We can do history navigation with rich information
+
+SLIDE
+
+We can have realtime CI information, jumping from a red build to the test code and the code it's testing to fix it
+
+Notifications that are targeted towards the current work
+
+... I'm sure you all can come up with plenty of ideas too!
+
+SLIDE
+
+WORLD DOMINATION
+
+SLIDE
+
+We're using github for VS as a baseline for testing features and seeing what works, and taking that to other IDEs, everywhere
+
+Currently we're looking at Unity3D integration, which is sorely lacking decent GitHub support. With git lfs and the new locking work, we can really make a dent there.
+
+Jetbrains has a huge line of IDEs for a variety of languages, with a large community. It's something we're looking into as well.
+
+We have guidelines for evaluating IDEs and figuring out what they can do and what we need to do to support the integration levels I talked before. It's research we want to apply to other IDEs as well, as we expand our coverage.
+
+SLIDE
+
+Also a part of our work is helping other teams in-house figure out what their features would look like from an API / integrator perspective.
+We're a small team, and we'd love to integrate every new .com feature as they come out, but it's hard to keep up and APIs aren't always available. We'd love to help with that!
+
+Also, yeah, we're hiring :D
+
+SLIDE
+
+QA

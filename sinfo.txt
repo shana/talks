@@ -1,0 +1,89 @@
+What do I do?
+
+I am currently at GitHub and I'm the Editor Tools team lead. The Editor Tools team is responsible for integrating GitHub into tools like Visual Studio and Unity.
+We work in whatever language is required for the tool that we're building integrations for.
+Every tool has its extensibility API and its preferred language for development. Visual Studio is C#, Unity requires C# and C++, and something like Atom is javascript.
+
+If the tool we're integrating into is cross-platform, then we do cross-platform development too. And to be honest, your preferred OS for development doesn't really have to match your target OS - I didn't even have a Windows machine until a year after I started building GitHub for Visual Studio, and Visual Studio is a Windows-only application - I use VMs and physical machines all the time, whatever is most convenient at the time.
+
+We are a remote and distributed team. I'm currently in Copenhagen, Denmark and I have team mates in Bologne, Bristol, New York and San Diego.
+Other teams at GitHub are even more distributed, with people in Japan and Australia.
+
+All of our projects are open source, and all of the work discussions and planning happens in our open source repositories on GitHub.
+
+Our latest launch was GitHub for Unity last year at GDC. You can check our work at https://github.com/github/VisualStudio and https://github.com/github-for-unity/Unity
+
+===
+
+Before GitHub, I was at Unity.
+If you don't know what Unity is, it's a game development middleware - a set of editor and tools for game developers to build games with.
+At Unity I worked on the scripting team, which builds and maintains the scripting engine and layers that bind it to the runtime.
+Most games are built with a game engine and a scripting language on top of it, to allow game designers to create the mechanics and content of the game without having to worry about lower level details like graphics pipelines or physics engines or pointers.
+In Unity's case, the runtime is C++ and the scripting layer is C# running on top of a C runtime.
+I worked on things like fixing compiler, runtime and garbage collection bugs, building code generation tools, package managers, threading systems, event systems. Most of the scripting runtime work was open source, and I open sourced anything that wasn't directly related to internal tools or the engine.
+
+I've also done open source consulting work, for instance porting software to Linux.
+
+=== 
+
+Before Unity, I worked on the Mono project at Xamarin and at Novell.
+There, I built things like Moonlight (a port of Silverlight for non-Windows systems. Silverlight is/was a Flash-like browser plugin), web browser bindings, C#-to-C++ interoperabity frameworks, ported Winforms to Linux. All of this was open source/
+
+=====
+The open source life == the remote life
+====
+
+I've worked remotely for 11 years now, which is why I can be in Lisbon this week to talk to you without affecting my work schedule too much.
+Tomorrow I'll probably find a nice spot somewhere on the beach and work from there, the weather is waaaaay nicer here than in Copenhagen.
+In a few weeks I'll be in San Francisco, then probably New York.
+The only thing I need is my laptop, or laptops, power, and a decent internet connection.
+The best thing that's happened is the european roaming, which means I can have data anywhere in Europe without having to worry about it. 
+I carry a couple of phones with me since I have a few different sim cards for a few different countries where I spend more time, but a couple of months ago I switched to a plan that gives me 10GB of data roaming globally, so I don't have to worry about having local sim cards anymore (although I do have a US sim card, it's pretty handy, they get very confused when you give them a non-US phone number)
+
+Remote life means that you are in control over your schedule. You're not going into a physical office every day, no one can look in and see where you are physically.
+This gives you a lot of freedom to make your own schedule, but it's not easy and not everyone can handle it.
+Most of the time there's no people right next to you that you can turn to for a chat. Most of the time there's no people at all unless you go out to them.
+Your colleagues are in another country, in another timezone, they might not be awake at the same hours that you are. It can get very lonely, and without the constant realtime feedback of a location where you go every day with your colleagues, it can feel like no one sees you, that you're working in a vacuum.
+It's your job to reach out and make connections, keep your routine and your schedule despite the lack of external pressures, do the work regardless of whether there's someone around you.
+
+====
+
+Companies pay me to work on open source. Crazy, yes, I know.
+
+It turns out that open source is a profitable business and every successful company out there uses open source in one way or another, and it is in their best interest to hire and retain developers that work on these projects.
+
+It also turns out that open source development is a very effective way of making connections in the industry and making yourself be seen, which is the best way of getting more job opportunities.
+
+Even if it's not what you do for work, it's still the best way of boosting your career and getting those jobs that seem completely out of reach.
+
+======
+How did I get here?
+======
+
+Around 2006 I was here in Lisbon and had finished a consulting project at an insurance company - building a website or something of the sort. By this time I'd been following the mailing lists of several open source projects like Mono and Umbraco, and had used some of them to build internal tools at various places and projects I worked at. I had done a couple of posts and sent some patches in, so I had some history in the mailing lists.
+So when one day Miguel de Icaza posted on the mono mailing list that they were looking to hire a developer for the Mono team, I was ready for it and immediately applied. The whole hiring process was done remotely via email, and before I knew it I was a Novel employee working full time on open source software.
+One of the first things I did was look for open source conferences that I could afford to attend. Novell didn't really give us a conference benefit, but I felt it was important that I connected with people and so I went to FOSDEM and GUADEC and other conferences whenever I could.
+
+It was at FOSDEM that I met Lucas Meijer, then the lead of the scripting team at Unity, and helped him figure out some problems he was having with the Mono runtime. Some time later, he offered me a job.
+
+The friends and contacts I made over the years on mailing lists, discussion groups, IRC, social media and other forums eventually led to the porting contracts that I landed. I decided to take a year to rest and figure out what my next job would be, and ended up spending that year on a wide variety of projects, all of which came through friends and connections, over conversations at conferences and bars - I even spent a month in Jordan helping bootstrap a game studio.
+
+I met my next future boss at a conference in Oslo
+
+=====
+GSoC
+=====
+
+I've mentored students on Google Summer of Code for 7 years. Google Summer of Code is a 3 month open source paid internship where you get to work on an OSS project for one of the many mentoring organizations in the program.
+I've had two very succesful students that went on to get hired later. Both these students were full time at the university while doing GSoC, and both ended up doing GSoC for two years in a row. The common characteristics they both had was that they were very engaged, very committed, very independent. One of the most common scenarios in a disappointing GSoC project is that the student gets distracted by something and disappears for a few days. Then they come back, and then they disappear again, and that pattern repeats itself and before you know it, the 3 months are over and the project isn't done. Successful students don't fall into this pattern. They might need to step away to deal with exams and other things, but they come back and they are fully committed when they're working on the project.
+They self-organize and self-plan. They don't wait for the mentor to tell them what to do. They request feedback but aren't blocked by it. They make goals and they make them happen.
+
+
+
+====
+What I look for when I hire
+
+When we went through our latest round of hiring, we had 500 candidates to go through.
+We had to get that list down to 2.
+All our projects are open source.
+Can you guess how many of the 500 candidates took the time to check out the projects and submit patches?

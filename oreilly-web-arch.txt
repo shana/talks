@@ -1,0 +1,266 @@
+SLIDE 
+
+Hello. Welcome to confessions of a cross platform engineer.
+My name is Andreia Gaita. I work at GitHub, as a technical lead building developer tools.
+Over the past 10 years I have worked on multiple cross-platform tools, libraries and runtimes at companies like Unity, Xamarin and Novell
+
+This talk is about cross platform development, the challenges of building cross platform apps, and my personal practices when it goes to doing these things. 
+
+SLIDE 
+
+So what is a cross platform engineer?
+I have a picture of a cross platform engineer in the wild, so you can more easily identify them.
+
+SLIDE
+
+Here it is, a cross-platform engineer, slightly green.
+
+SLIDE
+
+One definition of a cross-platform engineer is that they do code tailored to the platform where the code is going
+to run on.
+
+SLIDE
+
+When we're talking about a platform, we're talking about the OS it's running, but also its environment.
+This includes the hardware architecture, systems APIs and services, possibly the UI if it's unique enough that it merits writing code that targets it.
+
+For instance, Windows, regardless of versions, is one platform, but the Windows Store is a separate platform, because it's constrained enough and different enough that it can be considered a separate platform. Sometimes what defines a platform is in the form factor, the UI paradigms, how users will consume apps - for example, Android vs Android TV; same OS, same APIs, but the form factor, constraints and types of applications that are going to run on an Android TV merit it being considered a separate platform.
+
+The Web is one platform, but you can use web technologies to create applications that run on traditional desktop OSs. When you take the application out of the browser and into a native desktop environment, you're taking it from one platform to another, and as a consequence, your application is now subject to the paradigms and assumptions of the platform you're running on,
+
+SLIDE
+
+Let's focus on the problem on native cross-platform applications. By their nature, anything that is able to run on more than one platform will have its share of problems, more or less depending on the type of application.
+
+SLIDE
+
+Libraries and runtimes hit the essential problems of trying to abstract the underlying platform into a common layer.
+Command line tools have the additional challenge of having to support completely different command line paradigms, implementations and scripting environments - and if you've ever used a windows command line and a unix command line, you know the difference I'm talking about.
+
+GUI apps bring in a whole slew of other problems that have to do with UI styles, widgets, behaviours, user usage patterns and assumptions, even permission models, etc, etc
+
+SLIDE
+
+If you have ever used more than 1 OS, you've probably noticed that everybody does it differently.
+
+This is Sublime on Windows 8.1 and MacOS.
+It's a cross-platform app with a custom UI toolkit, who's primary target platform is Linux, with MacOs and Windows as cross-platform targets.
+
+You can see that on MacOS the menus are separate from the application itself, set on the top menu bar of the window manager. They're a part of the OS UI, even though the application controls them. The window control buttons - maximize, minimize, close - are on the left side. The name of the application is on the menu bar, and there's no application icon anywhere in this UI.
+
+On Windows the menus are a part of the application UI itself. The window control buttons are on the right side, and there's an application icon on the left side of the top menu bar.
+
+Other things that not immediately visible from this screenshot is the location of the menu where the user can configure and customize the application - which on MacOS is traditionally, and pretty much always, a menu entry called Preferences under the application name top menu, while on Windows it used to be in Options under Tools, but then started showing up in Preferences under Edit and also under File, and with the recent surge of web-based apps built on Electron and similar technologies, it's really all over the place.
+
+An example of a UI paradigm that persists across platforms is the File menu on desktop chat apps like Slack, whose only function on MacOS is to close a channel, while on Windows it also hosts the Preferences menu. Does it make much sense to have a File menu that doesn't deal with files at all? Not really. Does it strongly hint that the primary platform of the Slack developers is MacOS? It certainly does.
+
+SLIDE
+
+These are just the most obvious platform differences for a UI app, but there are a lot more. Each platform has its own style, and I'm going to mostly focus on desktop, but for mobile and consoles and TVs it's the same thing, they all have different styles of design, different UI patterns, different ways of navigating the system and an app, different APIs to get services, different ways of doing installers, how to publish/distribute apps on the platform. Sometimes even in the same platform, different versions bring new styles and paradigms and new ways of doing things that you have to deal with.
+
+Also notification systems are vastly different, if there is a notification system that you can actually use - some platforms don't have a builtin notification system, which means you might have to roll your own, or take a dependency on a library that abstracts that for you, and then you hope that the library correctly abstracts all the platforms you want to target and is kept up to date with what newer versions of the platforms are doing.
+
+Widgets are different for every platform. Buttons handle differently, labels are rendered differently. It looks different, but it also acts differently, even responding to how you click on things, whether you single-click, double-click, triple-click, hover.
+How you scroll, natural scrolling, scrolling speed, all this wonderful differences.
+
+Menus are handled differently, we've already looked at some of those, but even on different versions of Windows, menus will behave differently to shortcut keys and will be rendered differently when they're activated or have passive focus.
+
+Keyboard shortcuts are completely different between platforms. Users are used to certain common platform shortcuts that apps always support, and if you're doing a cross-platform app on one platform and then you run it on the other and you don't handle those differences properly, you're going to have some broken users.
+
+App switching is another wonderful thing, depending wildly on the platform.
+
+On MacOS you only ever have one instance of any app for the purposes of app switching, so you switch between apps with command+tab and between multiple windows of the app with command+tilde. I will refrain from commenting on how hard it is to switch between windows on MacOS when you have a keyboard layout that doesn't put the tilde key above the tab key, because not all layouts do.
+
+On windows each window of an app is a separate instance, so you cycle between all windows with alt tab and there's no difference between an app and its windows. If you're building an application and you're coming from MacOS, having multiple floating windows is natural and doesn't block the user from quickly switching between apps. If you then bring that into Windows, the experience will be quite different. I came across a user asking how to dock all floating windows automatically in Photoshop on the Mac, back in 2013. The user comes from the Windows world, where that happened by default, into the Mac world, where that it didn't, and it was confusing.
+
+
+SLIDE
+
+
+So, when you're a cross platform developer, you're feeling this pain every single day. As a cross-platform developer, I am constantly switching platforms all day long, which means I can't get used to using specialized tools that only run in one platform. I want to, I really want to use Visual Studio every day of my life, but unfortunately if I need to compile something on another platform there's no Visual Studio. And if I train myself to use visual studio shortcuts and intelissense and build systems and all of these, as soon as I switch to another platform I have none of these things that help me productive, so I have to reduce myself to the lowest common denominator of the tools that I use. The good thing about it is that I spend most of my time using as many cross platform apps as I can (to reduce the impact of switching platforms), and it makes me happy that there's constantly more and more of them around.
+
+My main machine is a MacBook Pro maxed out with as much memory and disk and graphics as I can put in it, so that I can run multiple VMs for all my work. I have VMs with Windows 7, 8 and 10 running every version of Visual Studio from 2008 to the new 15 Preview, multiple Linux flavors, and multiple compilers and toolchains and frameworks going back to Xcode 4, archived somewhere on my backups. Multiple browsers, multiple window managers, multiple everything.
+
+I spend most of my time these days developing on Windows, and before that it was Linux. I chose Mac as my base of operations not because I spend a lot of time developing for it, but because it provides me the widest reach - a mobile platform with hardware powerful enough to run multiple instances of Visual Studio concurrently on a VM, with Unixy-like behaviour in its tools and shell that allows me to be productive on the command line, with a good range of cross-compilers that allows me to target the widest range of platforms.
+
+I still need to actively use all the platforms I target to make sure I understand how they work and their unique characteristics, and so I actively use all of them - I have browsers and chat apps running, I keep hitting alt+1 instead of ctrl+1 when I'm on slack on windows trying to switch teams because alt is in the same spot as command on MacOS and my thumb just goes straight there... the usual cross-platform pain.
+
+SLIDE
+
+
+Besides the UI integration itself, there's also platform integration specific things. Things like installers that you can easily overlook until a user tries to install your app in some other system and it gets installed to the wrong place because you never thought where things should be installed to because you don't really use that platform, even though you're targeting it.
+The differences between the three major desktop platforms in this regard are extreme.
+
+Launchers for the apps - you see launchers out there that are clearly very platform-specific and look just wrong somewhere else or give you wrong choices.
+
+Running services on the platform - every platform does it in a different way, which might or might not require admin privileges, all sorts of quirky system registration things
+
+Filesystem - if you're doing paths with forward and back slashes you're going to feel the pain very quickly. If you forget that some systems don't really care about casing but others do, it's going to be fun
+
+SLIDE
+
+With all of these problems, you want to be fast, you want to build apps and not spend too much time and resources, so how do you do this?
+
+There are multiple strategies to consider:
+
+
+You can split your codebase and use native ui toolkits, so that you have a native experience and you don't have to worry about the UI and most of the system integration, because the platform takes care of all that for you. This costs resources, of course, you need to split your codebase so you need people with multiple skills and experiences, and the more platforms you target the worst it is.
+
+It's costly, behaviours diverge over time because some platforms allow you to do some things that others don't, and making sure that doesn't happen is hard.
+
+SLIDE
+
+You can use one common code base and use cross-platform toolkits, which will save you time, but then you have to be very aware of how it's going to look and how it's going to behave, because most of the times it's not going to look or feel native on any platform, or only on one platform, and that becomes very obvious very quickly. Will it work for the users that you're targeting? Most existing toolkits feel natural in the platform that they were primarily targeting, and progressively distant from all the other platforms, depending on how fast they evolve. It depends on the platforms you're targeting and the kind of app you're making. 
+
+SLIDE
+
+You can also do one codebase and roll your own UI. There's a lot of apps that do this, based on Webkit, OpenGL, SDL and others. Here you decide you're not going to use any of the traditional platform toolkits, and instead you build your own based on abstract rendering engines that are not tied to any specific platform look, feel or behaviour.
+
+Electron apps fall between the one codebase/xplat toolkit and roll your own UI. Electron gives you some system integration - like menus and other scaffolding that looks native, but how native it really looks and feels depends on how much work you put into it.
+
+SLIDE
+
+When you're targeting platforms with similar form factors, like desktop, you can get away with a common codebase and UI for all your targets. If you're targeting platforms with very different form factors, like desktop and mobile, then that is no longer the case. 
+
+Considering the type of applications and user interactions that happen on a phone versus a desktop OS, you probably don't want to have a single application that runs on both, and instead have a specialized mobile application that takes advantage of the kinds of usages that occur on mobile.
+
+You want to share code, you want to share skills as much as possible, but still keeping in mind that mobile apps have constraints that desktop apps don't, and users are usually not doing the same things on a mobile app that they're doing on the desktop. So before thinking about saving time and sharing the codebase across multiple form factors, it's more useful to think about how people are going to use your app in those form factors, and maybe you then realize that your users are likely only using some X percent of all of the functionality of your desktop app, because that's what makes sense when they're on their phone.
+
+This is the reason that I kinda dislike that most cross-platform toolkits have messaging apps as their first example of what they can do - messaging apps are pretty much the lowest common denominator that works the same way across all platforms, mostly independent of form factor, so demonstrating a cross-platform toolkit by making a messaging app tells me nothing about how it can handle every other type of app that doesn't actually fall into this category.
+
+
+SLIDE
+
+There's a ton of frameworks that allow you to do cross platform development. I'm listing these merely because they're all different:
+
+wxWidgets is a C++ toolkit with a ton of bindings for most languages, so you use your language of choice with it.
+
+Xamarin forms is all C#, so you can do C# across all of the platforms and share code as much as possibly
+
+Kyvi - I don't know how to pronounce it - Kyvi is interesting, it's a python-based UI toolkit that's rendered in OpenGL, so they just went like "nope, nope, we're not going to try to bind all of the native UI engines in all of the platforms, we're just going to pick OpenGL and render everything with it". OpenGL runs everywhere, which means that yes, the UI might not be fully native, but on the other hand it's going to be fast and pretty and you can do a lot of very custom things with it.
+
+And then Electron, which uses webkit as the rendering engine and then your business logic is done in node and javascript.
+
+This is the approach that a lot of game engines use - giving you a scripting language on the frontend that allows you to do the design, you can give it to the designers and they can use it to make the UI without bothering about the runtime specific things. Doing a hard split between UI and business logic. In the case of Electron it's all javascript, so you can reuse all of the skills, but it doesn't have to be, you could do this rendering on a browser engine - and when I say browser, I really mean a rendering engine, any rendering engine.
+
+You could replace it for a rendering engine based on OpenGL and it would be the same concept - one side is dedicated to the UI, the other dedicated to the logic. This may or may not be the same language - they talk to each other, you have full control of the system but there's a hard split there. It's more and more being the most popular choice, mainly because a lot of the UIs on platforms are becoming very similar to web UIs, so you can more easily avoid jarring the user, but then you have those problems with shortcuts and menus and the likes, because if you're doing a cross-platform UI framework you really really need to be careful about the native interactions and not just pretend everything is the same.
+
+SLIDE
+
+
+So in the end it all comes down to layered approaches. You have to think about a cross platform app as a series of layers. If you're doing a UI app, there's a UI layer, which may or may not be the same language as everything else that you're running on. It's the UI on top, with as much design as possible and as little logic as possible, so you can have the business logic and the platform specific interactions on a lower, separate layer. With that split, then you can fix your UI without being tied to the backend and you can choose the best toolkit that gives you the most bang for the buck, whether that is reusing design resources or developer skills or other factors.
+
+SLIDE
+
+
+All these frameworks usually have some sort of structure like this. Usually you get a framework with a language, because a language is nothing without the libraries it provides for you, especially those libraries that abstract the platform for you. So for the browser, the DOM is the high level API, and behind that there's a platform abstraction that the DOM actually uses, so you're not usually accessing the engine directly, and then the platform specific code is the runtime.
+
+A browser is one of the most cross-platform apps out there, but this applies to Mono, .NET, Unity the game engine, applies to most of the cross-platform frameworks out there.
+
+SLIDE
+
+
+So suppose you want to target this: All of them, some of them. Maybe you want to write something VR for the new Oculus Rift, maybe you want to write it for the Oculus and the Vive and all of the other VR devices out there. Maybe you want to do a media server that runs on multiple platforms. Maybe you want to do a new source control system. Or you want to make a game but you don't want to use an existing game framework because you really want to play around with things. Imagine you want to target some non-conventional platforms.
+
+The more platforms you target, the fewer your language options are. There's python and perl and a lot of other languages out there, but if you want to target PS Vita or xbox or VR, your choices are going to be considerably narrow.
+
+SLIDE
+
+Your options are not only these, but these are the most portable and most cross-platform across the entire gamut of choices that you have.
+
+
+SLIDE
+
+C++11 is an interesting thing. C++11 and above come with a bunch of new libraries for threading, IO and other platform abstraction layers. They've actually done the work of abstracting the plaftorm for you, and most of this code actually just runs across platforms with no changes on your side.
+
+The link that I have here is a little blog post that I did a couple of years ago examining how cross-platform C++11 code is and how much cross-compiling you can do with it. And it's surprisingly a lot, I targeted Android and iOS and MacOS and Windows and Linux and Raspberry from my laptop, with one makefile.
+
+It's ridiculously powerful and portable and you can, of course, easily shoot yourself in the foot with it. Most languages that are cross-platform will have layers of C just to glue in things and talk to system directly, so you really can't avoid it.
+
+
+SLIDE
+
+C# and Mono run everywhere. It's been ported to pretty much every platform in existence, including consoles and embedded systems. It's the most performant and high-level cross-platform language framework available, if you don't want to go full C++ - and you really don't want to do any C/C++ beyond binding to the system in ways that you can't do in other languages. 
+
+
+SLIDE
+
+And why not both? Layers again, this is all about layers. Cross platform is all about not getting stuck into "this is the thing that I'm going to use and I'm going to make it work everywhere". Sometimes it doesn't, sometimes you need help from other languages that will glue and make things work properly. The point is that once build a good bottom layer that abstracts you from the platform in the way that you want, then you can build other layers on top with languages and frameworks that are nicer to use. You want to be productive with your actual app building once you have a good framework to target all of these platforms. This means that you want to choose the language that's good for you, that you can iterate fast, and layering helps.
+
+
+SLIDE
+
+You can have multiple libraries, multiple layers, where you stick the UI on top, which forces you to split up the UI specific things from everything else that you're doing. It is more upfront work, but in the long run it actually facilitates being able to switch out components, or having designers come in and work without getting bogged down in technical details, and doing all these things and still target multiple platforms.
+
+SLIDE
+
+So how do we build all these things?
+
+SLIDE
+
+Unless you have unlimited resources and build machines that can build for all of these platforms that you want to target, you probably want to do as much compilation in your main platform, so you can quickly run it locally and experiment. So you have to choose your primary platform that you're going to be working off of, at least cross-compile from, and choose your developer tools.
+
+SLIDE
+
+STORY TIME
+
+I wanted to try out C++11 and cross-compilation for the blog post, so I did a little game engine.
+
+I really like Visual Studio, so I was naturally inclined to use it as my primary platform, but I quickly realized that Windows is not feasible as a cross-compilation platform.
+
+The command line shell are not very performant, the compilers are quirky, IO is bad, it takes a long time and it's painful. It's way easier to compile to windows from other platforms.
+
+So now I was down to MacOS and Linux. Linux is one of the prime cross-compilation platforms, you can compile to almost all platforms from it, there's cross-compilers for everything, for every architecture, but then you want to target iOS and MacOS, and that's a problem because you need all the frameworks.
+
+You can totally move them around and do things, but then you're lazy, and you should be lazy, this is already hard work, so then the best choice is the Mac. It has a proper unix shell, cross-compilers are there, there are very well-maintained verions of clang and gcc, you have access to both the iOS and MacOS and all other Apple SDKs, so that was an obvious choice.
+
+SLIDE
+
+But I don't really like XCode, so the first thing I do is generate project files. I want to work on VS, I want to build and debug on it and use it, I'm productive on it. So I generate project files for multiple IDEs, so that I and any one else wanting to work on the code can use their IDE of choice. Makefiles and generating project files is a really important step for the ease of use of doing cross-platform development, so I can build things locally and on build servers or other platforms.
+
+
+SLIDE
+
+Choosing a build system: it needs to be cross-platform. Even though you're cross-compiling so you technically don't have to compile on multiple platforms, it might be necessary, and a cross-platform build system means that it'll  be aware of platforms, so it'll generaly be easy to set up for multiple platforms, with more control, just because whoever made the system is already aware of platform differences. 
+
+It needs to be able to have multiple targets - debug, release, but also architecture specific, it needs to be able to allow you to customize compiler flags and adding new compilers it doesn't know about. When you're cross-compiling, you're going to have a bunch of different compilers with slightly different names, slightly different flags, slightly different structure, all sitting on your machine, and you want easily configure those without fighting the build system.
+
+You want to be able to shell out to other tools because you want to invoke generators that quickly generate code for you to target different platforms. You want to have conditional source file compilation on the build system so you can avoid ifdefs all over the place.
+
+It needs to be smart about generating build artifacts into different locations, so you can do builds for different combinations of platform and configuration and architecture without having them interfere with each other. It needs to be able to do parallel builds, because you really don't want to do 10 different builds one at a time. That takes a really long time.
+
+
+SLIDE
+
+These are some examples of build systems that are scriptable and cross platform and automatable and parallelizable. They each have their problems. Some are weird, like jam which is based on Lua. They all work. In the end, I prefer autotools just because I lived on Linux for a really long time and can easily make it do the things I want to do, but I will use any of the others if available and if they're more suited to the task at hand. It is a question of what makes it easier for you. It's not the best one, it's what works for you, that you can configure and run.
+
+
+SLIDE
+
+Then, scripting tools. You need to launch the build system and you need to set up environment, environment variables, you want to pass in flags or have a little configuration menu to choose the builds that you want to run, and you don't want to be doing this manually inside the build system. That's not what build systems are for, and fighting the build system usually doesn't work. So you want to choose a scripting language that you use to drive your build system.
+
+Whatever scripting language, it should also be cross-platform, and this is the one that your contributors are going to use, this is going to likely be their entry point, so make this the easiest thing to use, so that when someone comes in and says "I want to help out, how do I build", you can just say "here, run this". It needs to work for everyone, not just for you.
+
+This means the choices are kinda limited. These are the most popular ones. I prefer native shell scripts, like a bash script and little windows batch file, because they don't require any dependencies. I usually don't have to do more than set up environment variables. You can use perl or python or anything else that you know that can easily be installed and run on a developer machine without problems. This is the frontend of your build system, it needs to be small and neat and reliable and with as little dependencies as possible.
+
+
+SLIDE
+
+There's more, do I have time?
+
+Testing. Testing is hard. It's going to be across multiple layers, possibly different languages. Some languages and frameworks are easy to test, so you want to keep the bulk of your logic in those. UI is hard, and usually requires a mix of manual and automated testing. When you put your build system together, you want to make sure you have an easy way of running tests, even though you might not have them, so you can quickly put things in a CI server and run tests. Putting together an infrastructure that allows you to automate these things later is key. If you don't think about how you're going to run tests on your build system, on your scripts, it's going to be harder to plug these things afterwards.
+
+Dependencies are a pain, no matter what language or framework you're using. If you depend on something external, it will break you eventually, no matter how stable it seems. They might not exist on one of your target platforms, may not be packaged there, or be different. A tool that your build system is relying on in one platform might not exist at all on another or require extra installation steps. You should be very conservative about your dependency update strategy, so that you always have a good picture of your environment. I tend to submodule and create custom packages of the things I depend on for building, so that the platform can't take the rug out from under me, suddenly the build system breaks because some dependency is suddenly gone from some server. I like to keep my dependencies local as much as possible to avoid that.
+
+
+SLIDE
+
+In the end, you need to be adaptable. You need to not be afraid of switching tools, switching habits, switching platforms, switching shells, trying out new things, things breaking on you. You need to not panic, Things break all the time in cross-platform work, and you have to feel the pain of using an app on a platform that you're probably not very used to, so that you can avoid that pain for your users.
+
+It's going to be uncomfortable, but it's a lot of fun, a lot of challenges, and the tools and apps that cross-platform developers create make life easier for everyone, it's rewarding.
+
+
+SLIDE
+
+Thank you

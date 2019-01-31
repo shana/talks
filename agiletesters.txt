@@ -1,0 +1,145 @@
+Hi everyone! Thank you for tuning in. Thank you to our host for inviting me to speak to you today, I hope it'll be useful, or at least entertaining.
+
+My name is Andreia Gaita. I'm a technical lead at Github on the editor tools team. We do Github editor integrations like GitHub for Visual Studio and GitHub for Unity. I previously worked at Unity on the runtime and scripting engine, and before that at Xamarin and Novell, where I implemented mono. Before that I did consulting, ran my own company, did web development, and spent a lot of time in IT departments at financial institutions building things.
+
+I'm not a QA person by trade. I am, however, a cross platform developer, and I spend a lot of time porting, reimplementing and replacing existing software, and also designing and prototyping tools, and testing is an absolute integral part of all that work.
+
+Testing is a thing that a lot of developers go "aaawww I have to write tests?? boring!!!". This usually comes up hand in hand with a discussion of what types of tets to write, with the words "unit tests" and "integration tests" thrown around, and something getting written just to appease whoever is asking for "tests"
+
+STORY: The Mocking Incident
+
+I'm starting with this story because this is only story that I have that highlights the negative sides of an extreme test driven development mentality. This isn't trying to put TDD down, what I hope to highlight here is that every practice is a tool that you can either use to your advantage or use to shoot yourself in the foot. This whole incident is not what TDD is, but what someone thought TDD was.
+
+Once upon a time, there was a new project ramping up for this massive application such that parts of it could be updated independently of other parts. This would help individual teams ship their features faster because they would no longer be dependent of a single ship point that everyone had to synchronize on, and users could get smaller updates just for the parts that they were actually using, instead of waiting ages for fixes to come along on the next version.
+
+The project was assigned to a person that had been trying to introduce a testing first attitude at the company for a long time, with limited success - there was a general lack of standardized testing infrastructure and practices, it didn't get a big buy-in from senior people at the company, and most developers had never done any sort of testing in their careers. It was a really hard sell internally (that has since changed)
+
+When this project came along, this person was determined to show how TDD could be used to create better software and really kick it out of the gate. Now the team was small and busy with many projects, and like other teams at the company, code reviews only happened when branches were getting ready to be merged to master, so everyone had their hands full. Some months pass and the project is coming along steadily - code is getting checked in, internal CI is setup and running all the tests, things are moving along.
+
+And then the unexpected happens, and the person and company part ways. Now there's this really crucial project on our hands and we have to figure out who's going to pick it up, and so I picked it up.
+
+This was right at the time where we had our team summit, which is where we figure out the projects for the upcoming year and prototype things for a week, and so I dove into the existing codebase to continue the work. Diving into unfamiliar codebases is one of my specialties, and this particular codebase was a solution with something like 10 projects, fully tested, from a senior developer and agile coach who absolutely knew what he was doing. I figured this would be pretty solid stuff that I could continue working on.
+
+And then I basically had to throw most it away and start from scratch.
+
+You see, this was TDD driven to its most extreme levels. There were countless lines of code written over a few months period, hundreds of tests, tons of interfaces, but there was no actual implementation. There was no actual functionality. 
+
+Everything was mocked to describe exactly how each individual component would have data in and data out, but no component was actually implemented. It was this huge big facade with nothing behind it. Still to this day I am amazed at how you can write so much code that does absolutely nothing. It was a like a coded description of all the components of a system, like a design spec written in tests.
+
+Problem #1 - Organic system design
+
+Because the whole system grew out of individual mocked tests, every component was highly modular and split up, completely isolated from each other. It was impossible to control the lifetime of any component, or even figure out how to bootstrap the system - everything just magically came into being via dependency injection, because when you have a highly isolated set of components, loosely coupling them usually involves some sort of inversion of control and dependency injection. There are great ways of making use of these mechanisms, but there is such a thing as too much decoupling. When a system is not designed and grows organically from tests, exagerated decoupling is a side effect.
+
+Letting the design of a system just spring up from the needs of the individual test you're writing at the moment is not really designing a system, it's just letting it emerge from chaos. It creates a tangle of components that quickly become unmantainable, with interdependencies not being thought about and spec'd out.
+
+Anyone trying to change anything in the system risks massive cascade ripples of effects and breakage. Systems should be designed, they don't just spontaneously occur. It was completely unmantainable.
+
+Problem #2 - Implementation mocking
+
+Every test focused on testing a very specific piece of the system, mocking everything else around it. Which is fine, if the functionality that you're testing is not mocked. But if every line of the test is exercising a mock facade, then that is not a test - it's a statement of intention. A test tests things. A pass on a test means that the implementation being tested ran according to the specifications of the test - and the keyword ere is implementation. If you have a green test where the test is running against a facade instead of an actual implementation, the test is lying to you - it can't ever be red because the test itself is providing the implementation (via the mocks), so it can never fail.
+
+If you're writing a test for a functionality that does not exist, it should totally fail, it should be red. And that's a good thing! That means that the test is not prescribing what the implementation should look like, it is only dealing with what the implementation is doing - and if it doesn't do anything, well then that is totally a red test.
+
+When you're implementing a new feature, having red tests is great. There are some things you know you want the feature to do up front, so you can write those tests to document your assumptions. And then you start implementing, and your assumptions are going to change, because the real world sucks, and so you adjust your tests to reflect the changes of assumptions as your understanding of what you have to do grows, and you add more tests for all those other conditions that you suddenly realize you need, as you're implementing the feature. And when all the tests are finally green, that green check means something.
+
+Problem #3 - Ideal world assumptions
+
+Assumptions are the mother of all f**kups.
+
+Because the entirety of the system was a reflection of the initial assumptions of what the system would do, it actually did not reflect what the system actually had to do, and what the system had to deal with. It was built on a huge number of assumptions of how things would potentially work. With enough experience developing software, you build up a mental picture of a lot of the roadblocks that you'll have to deal with along the way of implementing something, but that's by no means a complete picture. If you design a system on paper based purely on your assumptions of how the world works, what you imagine might be the needs and the problems of the system and the users, and then ship that, well, that's going to last about 5 seconds.
+
+Worse, investing that much time in building a complex system facade without actually starting on its implementation means that if some unforeseen thing is discovered later during implementation, it has the potential to destroy the whole house of cards by forcing a rearchitecture of the whole thing - it's one of the side effects of the 99% bug compatibility problem, I'll talk more about that in a bit.
+
+Moral of the story
+
+every practice is a tool that you can use to shoot yourself in the foot with.
+TDD is not a replacement for system design.
+If your test doesn't actually call an implementation of the thing you're testing, it's not a test, it's documentation.
+
+=====
+
+Unit tests and integration tests oh my
+
+There are formal definitions of what unit and integration testing means, but I don't really find these definitions very useful. They're technical definitions highlighting how much of the system a test touches, but they don't actually describe the role of the test. I prefer to think of tests as:
+
+Assumption tests
+
+These tests are written up front when creating a new feature. These are my assumptions of how the system is supposed to operate in all these different variations that I can think of. If one of these tests goes red at some point, it's a sign that either I broke something or that assumptions have changed, and the test needs to be changed to reflect those assumptions. These tests are not written in stone. It happens I change something, a test goes red, I decide that the assumptions have changed and rewrite the test for the new assumption. It also happens that I change something and tests go red, I go and look at the tests and remember why I did the thing I did at the time and undo the change. Sometimes it happens that I change something and tests go red that require me to do other fixups in other places in order for the whole thing to be consistent again, and that causes a ripple of effects down the codebase. Sometimes I keep at it, sometimes I realize the impact and back off from the change. Tests need to evolve with the codebase, and if they become useless, throw them away.
+
+Regression tests
+
+These are tests introduced after something broke to ensure it doesn't break again. They can be unit tests, but most often they're integration tests, because things break when components interact with each other in unexpected ways. A red regression test IS A PROBLEM. If you've already classified a breakage as a bug, fixed the bug and wrote a test to ensure the bug doesn't happen again, it's a bad sign if that test goes red, do not ignore it. A fix should always come with a regression test.
+
+Documentation tests
+
+When I go into an unfamiliar codebase, the first thing I do is look at the build system (if I can't build it it's not very useful), and then I look at the tests (even before looking at the rest of the code). I do this because tests are isolated pieces of code that describe how to initialize and run and use the software, because that's literally what they have to do to test things. Having tests that demonstrate how to do particular things with the software is better than 10 pages of text explaining how the thing works. If you hate writing API or usage documentation, I recommend writing tests instead :)
+
+Mapping tests, or reverse engineering tests
+
+STORY: Black Box Testing
+
+I've spent a large portion of my career porting software, making things run in systems they were never designed to run on, and replacing pieces of functionality without breaking the whole system that relies on it, a lot of it without access to the original source code. Sometimes, even access to source code is not much help.
+
+Imagine a build process for an application that has a C++ runtime and a C# scripting layer. When you have such an architecture and you need both C# and C++ to talk to each other, it's customary to write a tool that generates all the glue code for you. Some years ago, I was tasked with replacing such a tool with something that was better maintainable and more flexible. The goal was to seamlessly replace the old tool with the new tool, preferably with no changes anywhere else. 
+
+The tool in question was a set of perl scripts that took in one text and output the C# and C++ source files for it. The text file would basically be the type and method signatures written in C#, with special markup like STARTCLASS and ENDMETHOD, and sometimes included C++ code if the method required it. The perl script would go through the file and generate the correct C# and C++ code. It was really hard to maintain, it had all sorts of edge cases when parsing the markup and odd behaviours every now and then.
+
+The first thing I did was to write a test runner that would take some input and run it through the old tool and the new tool (that didn't exist yet) and compare the output fo the two. Then I added a test that took every markup file in the codebase, running it through the test runner. I immediately had 180 failing tests.
+
+Then, I wrote tests for every markup tag that the tool supported. These were individual snippets of text. From these I got maybe another 80 or 100 tests.
+
+So without a single line of code of the new tool written, I had almost 300 failed tests, which made me pretty happy. This provided me with a vision of how things were being actually parsed and interpreted (as opposed to how people thought they were being parsed). I started working my way through implementing everything and slowly getting green tests.
+
+After taking care of all the low hanging fruit, I had only a few remaining red tests, and that's where things got complicated. You see, no matter how small the system, interactions between components create emergent behaviour that you just can't foresee. For these perl scripts, there was soooo much emergent behaviour. One whitespace in one place would cause something to output incorrectly, and people found that if you omit a markup tag somewhere else, it would fix the output, so now there's all these subtle little tricks in the markup files working around bugs or unexpected behaviour of the tool. It's easier to patch and move on than to fix the tool, especially if you're not familiar with the tool source. Some things aren't even bugs, they're just undocumented emergent behaviour of the tool that people randomly stumble upon and start using.
+
+When you're trying to reimplement a black box by testing every input and output and replicating it, what do you do about the bugs? Do you reimplement them as well? What about emergent behaviour? A lot of bugs and emergent behaviour are side effects of the specific way something was implemented, so if you're reimplementing, you're not going to do it in the same way, which means you'll have different bugs and emergent behaviour, sooo.... what do you do? Everything else using this tool is assuming these bugs and behaviours exist, so they're either taking advantage of them or working around them. If you don't implement the bugs and behaviours, you'll break everyone that's relying on them.
+
+This is the 99% bug compatibility problem, as in, if I'm reimplementing a thing, I aim for 99% bug compatibility - there is 1% of bugs and behaviours that are so disruptive to the system that they compromise the whole design and aren't worth it.
+
+The last 3 tests that I needed to fix were in that 1%. To fix them, I would have had to replicate parsing bugs in the original tool that would have just broken the whole thing. At that point, running tests through the old and new tool to compare them was no longer valuable, and I switched to comparing against master files that had the output that matched what I needed the tool to produce, and fixed the original markup files to undo the hacks people did to them to make them work in the old tool.
+
+When the branch replacing the old tool with the new tool went in to production, nobody noticed, which also made me happy :)
+
+# Functional tests
+
+These are test plans run by QA of the whole app from the point of view of a user. They might be automated, or they might be manual. They can be exploration tests, trying to uncover problems, or regression tests, making sure existing functionality hasn't regressed. It's incredibly important to ensure that there are test plans and a systematic approach to testing things, because it's completely impossible to have 100% test coverage of your system, there is ALWAYS something that is untestable through code.
+
+STORY: The Case Of The Missing Ants
+
+Back when I was working on implementing winforms on Mono - Windows Forms (or winforms) is the old C# API for building windows applications, one step up from the Win32 API - at one point I was implementing how controls got focus. We had no access to source code nor could we look at any decompiled code, because we were implementing things in a clean room environment (i.e. to make sure there were no patenting or licensing issues with our reimplementation), so the only thing we had to go by were existing applications and test apps that we would make ourselves. In this case, I needed to figure out the correct sequence of events that would get raised whenever I clicked on a text box - like, the window would receive a focus event, then the container in the window, then the text box in the container. In other cases, events had to bubble up, and I had to figure out the correct sequence.
+
+If the sequence was wrong, existing windows applications would break on linux, because their whole logic relies on receiving these events in the correct order. There are also visual indicators of focus - when you click on something, it gets highlighted, the cursor is drawn on the box, and there's these little ant lines that show up indicating the focused area.
+
+I spent days creating test apps to try and figure out the logic behind the order of focus events and the visual indicators, until finally I managed to get a map of the whole thing and implemented it. I push the branch and go "yay finally fixed it, can someone do a sanity test for me please", and someone did - and their results were completely different from mine - on Windows!
+
+Remember, we're doing this so we can run windows apps on linux without recompiling. Linux is massively different from windows, so we always expect that not everything is going to work exactly in the same way as on windows, which is fine. But he was running this test app on windows, and getting completely different visual results than I was!
+
+# Assumptions are the mother of all f**kups
+
+I was working under the assumption that I was reimplementing a UI SDK written in C#, and that the behaviour I was trying to emulate was universal, and haha how wrong I was. Turns out, a lot of the UI controls on Winforms are just a light layer on top of the real controls, which are native controls - like the print dialog. Also, Windows has a bunch of options controlling the visual of the operating system, and some of those options change the way windows show focus indicators. Some of those options have nothing to do with focus indicators at all, but they just change something in the system that ends up changing how focus indicators show up.
+
+All my tests had been on my Windows XP, which was running on Aero mode or whatever it was called. The other person was running Windows XP on the classic theme. That drastically changed the way applications would show the focus indicators. And of course, anyone looking at the mono implementation would be seeing a very specific interpretation of how Windows rendered things, and if it didn't match their expectations, they thought it was broken.
+
+In the end, we just decided to take one version and run with it.
+
+The moral of the story is, when QA is running test plans, there might be a lot of things that the developer assumes QA  knows about how the feature works that they actually don't. The developer might not be aware of their own assumptions of the limitations of a system until they pass it on to someone else that exposes those limitations. Ideally, that happens early enough in the process that there is time and space to fix whatever bad assumptions were made.
+
+As a developer, be aware that your understanding of how things are going to be used is biased and limited - your assumptions are going to be wrong and they're going to be bite you. As a QA, get in on feature testing early enough to expose any bad assumptions being made, that really makes a big difference in the quality of the product.
+
+# The 6500 bug
+
+Around June 2015 I pushed a style fix to a checkbox. The checkbox is a part of a form that you fill out when you publish your repository to GitHub inside Visual Studio. Now this form lives in an area of Visual Studio called the Team Explorer pane, and for some reason the team explorer team uses their own custom styles for some their UI that don't match the defaults in visual studio. Checkboxes in particular show up slightly different, and in earlier testing we had an issue filed about the fact that the our checkbox didn't look the same as the rest of the checkboxes in that area.
+
+So I tweaked the style to match. This checkbox controls whether the repository will be public or private.
+
+On August 31, this happens. Apparently, this person had published a repository and checked the checkbox that said "private". The repository included AWS tokens. They pushed and went to bed. The next morning they wake up to find a bill of $6500 for aws usage. The repository had been published in public, and there are bots automatically scanning for aws tokens and stealing them, and their token had been taken and put to use.
+
+Now I was asleep at the time, because all this happened when the US west coast was awake. By the time I woke up in Copenhagen around 5:30 in the morning (for some reason I didn't sleep well that night), a patch had been shipped and everything had been taken care of (hurrah for remote distributed teams)
+
+So what happened? An apparently harmless change of styling to a checkbox had caused the click event on the checkbox to not be propagated to the click handler that we had set up. Visually, everything worked fine, the checkbox looked checked, but the code never got the event so it never actually flipped the flag.
+
+All our unit tests passed, of course, because they were testing the code in the backend after it got the event. Integration tests wouldn't work either because they would only test that the backend code correctly reacted to the checked event - they would not test the situation where you clicked on the checkbox but the event didn't happen.
+
+And our manual test plan didn't actually go all the way, saying "check this box, then publish the repository and validate that the repository is indeed private", they would just ensure that if you checked the box, it looked checked.
+
+We've since improved our testing practices to make sure something like this never happens again. Still, automation testing is hard on native applications, and the bigger the application, the more time things take to test, and sometimes the simplest of changes is the worst of changes.
