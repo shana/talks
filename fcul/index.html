@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+		<style>
+			* {
+  box-sizing: border-box;
+}
+			.horizontal {
+				display: flex;
+				flex-direction: row;
+				align-items: top;
+				align-content: space-between;
+			}
+
+			.horizontal .middle {
+				align-items: center;
+				justify-content: center;
+			}
+
+			.vertical .middle {
+				align-items: center;
+				justify-content: center;
+			}
+
+			.vertical {
+				display: flex;
+				flex-direction: column;
+				align-items: top;
+			}
+			.vertical * {
+				text-align: left;
+			}
+			.center {
+				justify-content: center;
+				align-items: center;
+			}
+
+			.clean {
+				border: 0px none !important;
+				box-shadow: 0 0 0px rgba(0, 0, 0, 0) !important;
+			}
+
+			.space {
+				padding-left: 5em;
+				padding-right: 5em;
+			}
+
+			:root {
+				--white: #FFF;
+				--black: #000;
+				--color0: #53585f;
+				--color1: #790040;
+				--color2: #670042;
+				--color3: #694094;
+				--color4: #c46a20;
+				--color5: #018429;
+				--color6: #0061b6;
+				--color7: #c82506;
+				--color8: #003399;
+				--bgblue: #009fb1;
+				--bgorange: #f06939;
+			}
+
+			.color0 {
+				color: var(--color0) !important;
+			}
+			.color1 {
+				color: var(--color1) !important;
+			}
+			.color2 {
+				color: var(--color2) !important;
+			}
+			.color3 {
+				color: var(--color3) !important;
+			}
+			.color4 {
+				color: var(--color4) !important;
+			}
+			.color5 {
+				color: var(--color5) !important;
+			}
+			.color6 {
+				color: var(--color6) !important;
+			}
+			.color7 {
+				color: var(--color7) !important;
+			}
+			.bgblue {
+				background-color: var(--bgblue) !important;
+				color: var(--white) !important;
+			}
+			.bgorange {
+				background-color: var(--bgorange) !important;
+				color: var(--white) !important;
+			}
+
+			.bgblue h1,
+			.bgblue h2,
+			.bgblue h3,
+			.bgblue h4,
+			.bgblue h5,
+			.bgblue h5
+			{
+				color: var(--white) !important;
+			}
+
+			.bgorange h1,
+			.bgorange h2,
+			.bgorange h3,
+			.bgorange h4,
+			.bgorange h5,
+			.bgorange h5
+			{
+				color: var(--white) !important;
+			}
+
+			.rotate1 {
+				-ms-transform: rotate(340deg); /* IE 9 */
+				transform: rotate(340deg); /* Standard syntax */
+			}
+
+			.rotate2 {
+				-ms-transform: rotate(20deg); /* IE 9 */
+				transform: rotate(20deg); /* Standard syntax */
+			}
+
+			.rotate3 {
+				-ms-transform: rotate(320deg); /* IE 9 */
+				transform: rotate(320deg); /* Standard syntax */
+			}
+
+			.rotate4 {
+				-ms-transform: rotate(40deg); /* IE 9 */
+				transform: rotate(40deg); /* Standard syntax */
+			}
+
+			.pos1 {
+				-ms-transform: translate(-500px,0px) rotate(340deg); /* IE 9 */
+				transform: translate(-500px,0px) rotate(340deg); /* Standard syntax */
+			}
+			.pos2 {
+				-ms-transform: translate(500px,0px) rotate(20deg); /* IE 9 */
+				transform: translate(500px,0px) rotate(20deg); /* Standard syntax */
+			}
+			.pos3 {
+				-ms-transform: translate(0px,-100px); /* IE 9 */
+				transform: translate(0px,-100px); /* Standard syntax */
+			}
+			.pos4 {
+				-ms-transform: translate(-300px,-50px) rotate(320deg); /* IE 9 */
+				transform: translate(-300px,-50px) rotate(320deg); /* Standard syntax */
+			}
+
+			.pos5 {
+				-ms-transform: translate(0px,-50px); /* IE 9 */
+				transform: translate(0px,-50px); /* Standard syntax */
+			}
+			.pos6 {
+				-ms-transform: translate(500px,-200px) rotate(40deg); /* IE 9 */
+				transform: translate(500px,-200px) rotate(40deg); /* Standard syntax */
+			}
+			.pos7 {
+				-ms-transform: translate(-500px,0px) rotate(340deg); /* IE 9 */
+				transform: translate(-500px,-100px) rotate(340deg); /* Standard syntax */
+			}
+
+			h1>strong,
+			h2>strong,
+			h3>strong,
+			h4>strong,
+			h5>strong,
+			h6>strong
+			{
+				color: var(--color1);
+			}
+
+			h1>em,
+			h2>em,
+			h3>em,
+			h4>em,
+			h5>em,
+			h6>em
+			{
+				color: var(--color3);
+				font-style: normal !important;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="#fefefe">
+					<div class="horizontal">
+						<img width="30%" height="30%" class="clean" src="content/avatar.jpg" />
+						<div class="space"></div>
+						<div class="vertical" style="align-content: flex-start;">
+							<h2 class="color0">👋 Andreia <span class="color1">“shana”</span> Gaita</h2>
+							<div>Freelance game developer && console porter</div>
+							<div>Editor Tools tech lead @ GitHub</div>
+							<div>Runtime & scripting engineer @ Unity</div>
+							<div>Mono hacker @ Novell & Xamarin</div>
+							<div class="horizontal middle"><img class="clean" src="content/twitter.png" /> @sh4na</div>
+						</div>
+					</div>
+				</section>
+
+				<section
+					data-markdown="content/slides.md"
+			         data-separator="^\r?\n>>>\r?\n"
+					 data-separator-vertical="^\r?\nvvv\r?\n"
+			         >
+			    <!--
+			        Note that Windows uses `\r\n` instead of `\n` as its linefeed character.
+			        For a regex that supports all operating systems, use `\r?\n` instead of `\n`.
+			    -->
+				</section>
+
+				<section data-background="#fefefe">
+							<h1><strong>Obrigada!</strong></h1>
+							<h3 class="color0">👋 Andreia <span class="color1" style="text-transform: lowercase;">“shana”</span> Gaita</h3>
+						<div class="space" style="padding: 1em;"><p></p></div>
+							<div><a href="https://twitter.com/sh4na">https://twitter.com/sh4na</a></div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				width: 1366,
+				height: 768,
+				margin: 0.1,
+				hash: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

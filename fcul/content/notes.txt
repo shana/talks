@@ -1,0 +1,98 @@
+Olá!
+O meu nome é Andreia Gaita. Gostaria em primeiro lugar de agradecer ao Alcides pelo convite para vir aqui falar hoje, acho que é a primeira vez que faço uma apresentação na fcul sem ser como aluna. É fixe :)
+
+Eu normalmente faço apresentações em inglês, e já há bastante tempo que não tenho uma conversa inteira em portugues, especialmente sobre tecnologia, por isso vamos a ver como é que isto sai.
+
+Um bocadinho sobre mim - por estes dias sou freelance, passo o tempo a portar jogos para switch, playstation, xbox; a fazer ferramentas customizadas para jogos; a implementar protótipos de jogos; e a aconselhar estúdios nas melhores práticas para trabalharem remotamente, que é algo que está em alta é algo que está em alta. 
+
+No passado estive no GitHub a criar ferramentas como o GitHub for Visual Studio e GitHub for Unity. Na Unity trabalhei no runtime (o motor), e especialmente na área de portabilidade e compilação de scripts. Antes disso estive na Xamarin e na Novell, a trabalhar no Mono. O Mono é uma implementação open source dos compiladores e máquina virtual do .NET, e é a infraestructura que a Unity usa para correr em 27 plataformas. Eu portei o compilador de F# para Linux, quando a Microsoft o lançou inicialmente, e por estes dias estou a fazer um pequeno compilador de Typescript para .NET, porque quero usar Typescript como uma linguagem de de scripting para jogos com Unity. 
+
+# Compiladores na Unity
+
+Hoje vou falar dos compiladores que a Unity usa em todas as fases de produção, as necessidades específicas dos jogos em termos de compiladores, e os desafios no geral de lidar com isto tudo em produção, tanto internamente como externamente.
+
+# Compiladores, transpiladores?
+
+Antes de mais, algumas definições que podem ou não ser importantes. Alguns dos compiladores que vamos ver hoje serão mais transpiladores que compiladores - a definição comum de transpilador é de que transforma código de um formato para outro sem alterar o nível de abstracção - o il2cpp é um exemplo. No entanto, honestamente, a quantidade de fases e optimizações e trabalho em geral que um transpilador tem de fazer é o mesmo que um compilador, e eu não acho que a diferenciação de termos seja útil.
+
+Todos estes compiladores e transpiladores fazem parte de um pipeline que transforma o que foi escrito originalmente em algo que a plataforma alvo pode interpretar. Cada compilador executa um tipo de transformação com um determinado fim, e o formato dessa transformação é escolhido por razões práticas. O facto de alguns realizarem transformações para formatos a um nível diferente de abstração, e outros não, não é uma distinção que traga algo super útil à conversa.
+
+Por isso, vai tudo corrido a compilador.
+
+# Quantos compiladores são precisos?
+
+Quantos compiladores é que vocês que são precisos para criar um jogo?
+
+### clang
+
+Ora bem, a primeira coisa que é preciso é um runtime - o motor - que gere todos os sistemas necessários - gráficos, som, lógica, IO, comunicações, etc. No caso do Unity, é em C++, e usa o clang.
+
+### .NET/Mono
+
+O jogo em si é feito com outra lingugem e ferramentas - .NET/Mono. O editor Unity também é baseado em .NET - aliás, não há qualquer razão para que o editor seja usado só para jogos, um runtime que corre um jogo também corre qualquer outro tipo de aplicações, e um jogo não é mais do que um tipo específico de aplicação.
+
+O compilador principal é o de C#, mas o Unity suporta qualquer um que crie IL, o bytecode do .NET. UnityScript é a linguagem original que a Unity criou baseada em ECMAScript (javascript), mas foi descontinuada.
+
+### Shaders
+
+Para meter gráficos bonitos no ecrã a velocidades aceitáveis, o ideal é lidar com a placa gráfica numa linguagem que ela entende, por isso temos mais uma linguagem e compiladores para shaders.
+
+### shaderlab
+
+Cada plataforma tem a sua linguagem de shaders própria - MSL, GLSL, HLSL, SPIR-V, OpenGL, OSL, PSL, Cg, etc, etc. Como o Unity corre em basicamente todas as plataformas, o editor inclui ferramentas que convertem shaders de uma linguagem standard para o que seja que a plataforma suporta.
+
+### il2cpp
+
+Este é um dos compiladores que vamos ver a fundo mais à frente. O il2cpp é um compilador especializado criado pela Unity para dar a volta a problemas de licenciamento de distribuição do runtime do Mono para plataformas incompatíveis com GPL, como o iOS.
+
+### Emscripten
+
+Emscripten é um compilador de C/C++ para Web Assembly, baseado em LLVM e binaryen. O Emscripten é usado para compilador jogos para a web. Veio substituir o pipeline de compilação para browsers baseado na NPAPI, a API que permitia correr plugins nos browsers, que foi removida à alguns anos.
+
+### Burst
+
+Este é outro compilador de C# especializado, criado pela Unity especificamente para código que usa Data-oriented design.
+
+
+
+# Os **compiladores**
+
+
+Clang
+
+Em projectos com grandes bases de código, é super importante ter ferramentas de análise da performance de todo o pipeline de compilação, e compiladores que produzam dados úteis para análise. Optimizar tempos de compilação para que o tempo de iteração de um programador seja o mais curto possível é das tarefas mais importantes de uma equipa de ferramentas internas. Se o projecto demora uma hora a compilar cada vez que uma linha é alterada, isso é um problema.
+
+Uma das melhores decisões foi trocar o GCC pelo Clang. O GCC é um excelente compilador, mas toda a sua infraestrutura de análise é interna, e sem informação do que o que o compilador está a fazer num formato útil para análise e comparação, não é possível optimizar o código de forma a corrigir problemas deste género.
+
+O Clang, por outro lado, é um compilador mas também é uma biblioteca/API que pode ser usada para todo o tipo de ferramentas. Toda a informação que o compilador acumula internamente nas várias fases está disponível através de APIs e estruturas de dados.
+
+Um exemplo das melhorias que foram possíveis foi a redução dos tempos de compilação de 1 hora para 15 minutos. Um dos grandes problemas do C++ é que é muito fácil incluir headers que causam a recompilação de todo o código, mesmo que nada tenha sido alterado, e para descobrir porque é que o compilador decidiu compilar algo, é preciso ter acesso a todos os dados das várias fases de decisão do compilador.
+
+É mais fácil usar headers pré-compilados, mas aí dá-se o problema oposto, do compilador achar que não precisa de recompilar um header - e descobrir que header é que está errado e convencer o compilador a recompilar... é mais fácil atirar a cache toda fora, e passar mais uma hora a recompilar tudo. Muitas horas foram perdidas a tentar descobrir porque é que algo compilava numa máquina e não noutra, mas eventualmente, com a ajuda de ferramentas baseadas em LLVM e clang, a equipa conseguiu limpar o código e os scripts de compilação, e hoje em dia, é super estável.
+
+Um dos problemas inesperados que aconteceu quando mudámos para o clang foi que o compilador é muito específico no que toca a compiler warnings - cada patch release do compilador introduzia mais e mais granularidade nos avisos, e alterava os defaults das mensagens. É óptimo ter toda essa informação, mas é standard ter Warnings as Errors, por isso cada update do clang falhava a compilação automaticamente. Demorou muito tempo para investigar cada um dos avisos, decidir se é importante ou não, e ir corrigir o código. Quality is hard
+
+# Quando C não é **C**
+
+
+# Burst e DOD
+
+o compilador burst foi criado para optimizar a paralelização do acesso de dados e operações sobre dados, baseado no paradigma de design orientado a dados. A ideia é que, dada informação sobre a organização ideal de dados e garantias de ausencia de efeitos secundários, é possível optimizar o carregamento e alinhamento de dados, tanto em código como em memória, para ser possível realizar milhares de operações sem precisar de hardware especializado.
+
+Isto é especialmente útil em simulações que, por exemplo, precisam de processar milhares de objectos em cada frame. 
+
+## OO design
+
+## DO design
+
+## codigo burst
+
+## sem vectorizacao
+
+## com vectorizacao
+
+## floats copiados
+
+
+# il2cpp e emscripten
+
